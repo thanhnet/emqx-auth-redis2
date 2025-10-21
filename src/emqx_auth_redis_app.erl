@@ -37,7 +37,8 @@ stop(_State) ->
     emqx:unhook('client.check_acl', fun emqx_acl_redis:check_acl/5),
     %% Ensure stop cluster pool if the server type is cluster
     eredis_cluster:stop_pool(?APP).
-
+MasterName = application:get_env(emqx_auth_redis, sentinel_master_name, undefined),
+Sentinels = application:get_env(emqx_auth_redis, sentinels, []),
 load_auth_hook(AuthCmd) ->
     SuperCmd = application:get_env(?APP, super_cmd, undefined),
     {ok, HashType} = application:get_env(?APP, password_hash),
